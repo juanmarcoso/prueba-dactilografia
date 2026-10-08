@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica de dactilografía</title>
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="practice-page">
+  <div class="alert alert-warning app-alert" id="appAlert" role="alert" hidden></div>
+
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-mark">D</span>
+      <span class="brand-text">Dactilo<em>Práctica</em></span>
+    </div>
+
+    <div class="header-tools">
+      <button type="button" class="btn btn-tool" id="btnPrint">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5Zm0 1h4a1 1 0 0 1 1 1v2H4V3a1 1 0 0 1 1-1Zm5 8H6a1 1 0 0 1-1-1V8h6v1a1 1 0 0 1-1 1Zm1 3H5v-1h6v1ZM12 6.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1Z"/></svg>
+        Imprimir
+      </button>
+      <button type="button" class="btn btn-tool" id="btnSettings" data-bs-toggle="modal" data-bs-target="#settingsModal">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.433 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg>
+        Ajustes
+      </button>
+      <button type="button" class="btn btn-tool" id="btnHistory" data-bs-toggle="modal" data-bs-target="#historyModal">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4.5a.5.5 0 0 1 .5.5v5.21l3.246 1.872a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 8 10.5V5a.5.5 0 0 1 .5-.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+        Historial
+      </button>
+      <a class="btn btn-tool" href="dashboard.html">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 14h3V7H1v7zm5 0h3V3H6v11zm5 0h3V9h-3v5z"/></svg>
+        Dashboard
+      </a>
+    </div>
+
+    <div class="header-practice">
+      <div class="form-check form-switch mb-0">
+        <input class="form-check-input" type="checkbox" role="switch" id="toggleShowText" checked>
+        <label class="form-check-label" for="toggleShowText">Mostrar Texto</label>
+      </div>
+
+      <div class="input-group input-group-sm time-group">
+        <label class="input-group-text" for="selectMinutes">Tiempo</label>
+        <select class="form-select" id="selectMinutes">
+          <option value="1">1 minuto</option>
+          <option value="2">2 minutos</option>
+          <option value="3">3 minutos</option>
+          <option value="4">4 minutos</option>
+          <option value="5" selected>5 minutos</option>
+        </select>
+      </div>
+
+      <div class="countdown" id="countdown" data-state="idle">05:00</div>
+
+      <button type="button" class="btn btn-accent" id="btnStart">Iniciar</button>
+    </div>
+  </header>
+
+  <main class="practice-main" id="practiceMain">
+    <section class="panel panel-reference" id="referencePanel">
+      <div class="panel-head">
+        <h1 class="panel-title" id="snippetTitle">Cargando texto…</h1>
+        <span class="badge text-bg-light" id="snippetMeta">— palabras</span>
+      </div>
+      <div class="reference-text" id="referenceText"></div>
+    </section>
+
+    <div class="split-handle" id="splitHandle" role="separator" aria-orientation="vertical" aria-label="Redimensionar paneles" tabindex="0"></div>
+
+    <section class="panel panel-typing">
+      <div class="typing-wrap">
+        <textarea
+          id="typingArea"
+          class="typing-area"
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          placeholder="Pulsa «Iniciar» para comenzar la práctica…"
+          disabled></textarea>
+        <div id="result-overlay" class="result-overlay d-none"></div>
+      </div>
+
+      <div class="live-status">
+        <span id="liveWords">0 palabras escritas</span>
+        <span class="status-dot" id="liveStatus" data-state="idle">En espera</span>
+      </div>
+
+      <div class="timer-progress" id="timerProgress" hidden>
+        <div class="timer-bar" id="timerBar"></div>
+      </div>
+
+      <div class="results" id="resultsPanel" hidden>
+        <div class="results-head">
+          <h2 class="results-title">Resultado de la práctica</h2>
+          <span class="badge text-bg-success" id="saveBadge" hidden></span>
+        </div>
+        <div class="results-grid">
+          <div class="stat">
+            <span class="stat-value" id="statCorrect">0</span>
+            <span class="stat-label">Palabras correctas</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statTotal">0</span>
+            <span class="stat-label">Total escritas</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statPrecision">0%</span>
+            <span class="stat-label">Precisión</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="statWpm">0</span>
+            <span class="stat-label">Velocidad (PPM)</span>
+          </div>
+        </div>
+        <p class="results-hint" id="resultsHint" hidden></p>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-outline-accent" id="btnCheck" disabled>Corregir</button>
+        <button type="button" class="btn btn-outline-secondary" id="btnReset" disabled>Reiniciar</button>
+        <button type="button" class="btn btn-primary" id="btnNew">Nueva Práctica</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="print-sheet" id="printSheet" aria-hidden="true"></div>
+
+  <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="settingsLabel">Ajustes</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label" for="settingMinutes">Tiempo por defecto</label>
+            <select class="form-select" id="settingMinutes">
+              <option value="1">1 minuto</option>
+              <option value="2">2 minutos</option>
+              <option value="3">3 minutos</option>
+              <option value="4">4 minutos</option>
+              <option value="5">5 minutos</option>
+            </select>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="settingHideOnStart">
+            <label class="form-check-label" for="settingHideOnStart">Ocultar el texto al iniciar</label>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="settingCaseSensitive">
+            <label class="form-check-label" for="settingCaseSensitive">Distinguir mayúsculas y minúsculas</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="settingIgnoreAccents">
+            <label class="form-check-label" for="settingIgnoreAccents">Ignorar tildes al corregir</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-accent" id="btnSaveSettings">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="historyLabel">Historial de prácticas</h2>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Periodo">
+            <input type="radio" class="btn-check" name="historyPeriod" id="period30" value="30" checked>
+            <label class="btn btn-outline-secondary" for="period30">30 días</label>
+            <input type="radio" class="btn-check" name="historyPeriod" id="period90" value="90">
+            <label class="btn btn-outline-secondary" for="period90">90 días</label>
+            <input type="radio" class="btn-check" name="historyPeriod" id="period365" value="365">
+            <label class="btn btn-outline-secondary" for="period365">1 año</label>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="history-summary" id="historySummary" hidden>
+            <div class="stat">
+              <span class="stat-value" id="histTotal">0</span>
+              <span class="stat-label">Prácticas</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="histPassed">0</span>
+              <span class="stat-label">Aprobadas</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="histAvgWpm">0</span>
+              <span class="stat-label">PPM promedio</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="histAvgPrecision">0%</span>
+              <span class="stat-label">Precisión promedio</span>
+            </div>
+          </div>
+
+          <div class="history-loading" id="historyLoading" hidden>Cargando historial…</div>
+          <div class="alert alert-secondary" id="historyEmpty" hidden>No hay prácticas registradas en este periodo.</div>
+          <div class="alert alert-danger" id="historyError" hidden></div>
+
+          <div class="table-responsive history-table" id="historyTable" hidden>
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Texto</th>
+                  <th class="text-end">Min</th>
+                  <th class="text-end">Correctas</th>
+                  <th class="text-end">Precisión</th>
+                  <th class="text-end">PPM</th>
+                  <th class="text-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="vendor/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/practice.js"></script>
+</body>
+</html>

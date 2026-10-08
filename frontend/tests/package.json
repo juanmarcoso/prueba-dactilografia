@@ -1,0 +1,12 @@
+{
+  "name": "software-dactilografico-frontend-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pruebas jsdom del frontend (practica y dashboard).",
+  "scripts": {
+    "test": "node practice.test.js && node dashboard.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^30.1.2"
+  }
+}

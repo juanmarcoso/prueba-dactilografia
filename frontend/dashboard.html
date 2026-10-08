@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · Práctica de dactilografía</title>
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-page">
+  <div class="alert alert-warning app-alert" id="appAlert" role="alert" hidden></div>
+
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-mark">D</span>
+      <span class="brand-text">Dactilo<em>Práctica</em></span>
+    </div>
+
+    <nav class="header-nav">
+      <a class="btn btn-tool" href="index.html">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M5 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H5zm0 1h6a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zM6 4h4v1H6V4zm0 2h4v1H6V6zm0 2h4v1H6V8zm0 2h2v1H6v-1z"/></svg>
+        Práctica
+      </a>
+      <span class="nav-current">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 14h3V7H1v7zm5 0h3V3H6v11zm5 0h3V9h-3v5z"/></svg>
+        Dashboard
+      </span>
+    </nav>
+
+    <div class="header-tools">
+      <button type="button" class="btn btn-tool" id="btnReload">
+        <svg class="tool-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/><path d="M8 4a.5.5 0 0 1 .5.5v5.21l3.246 1.872a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 10.5V4.5A.5.5 0 0 1 8 4z"/></svg>
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="dash-loading" id="dashLoading">Cargando datos…</div>
+
+    <section class="top-cards" id="topCards" hidden>
+      <article class="highlight-card">
+        <span class="highlight-label">Tasa de aprobación</span>
+        <strong class="highlight-value" id="approvalRate">—</strong>
+        <div class="highlight-track">
+          <div class="highlight-bar" id="approvalBar" style="width: 0%"></div>
+        </div>
+        <span class="highlight-note" id="approvalNote">—</span>
+      </article>
+
+      <article class="last-card">
+        <span class="metric-label">Última práctica</span>
+        <strong class="last-date" id="lastDate">—</strong>
+        <span class="last-meta" id="lastMeta">—</span>
+      </article>
+    </section>
+
+    <section class="metrics-grid" id="metricsGrid" hidden>
+      <article class="metric-card">
+        <span class="metric-label">Mejor resultado</span>
+        <strong class="metric-value" id="bestCorrect">—</strong>
+        <span class="metric-note">máx. palabras correctas</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Precisión promedio</span>
+        <strong class="metric-value" id="avgPrecision">—</strong>
+        <span class="metric-note">% de palabras correctas</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Velocidad promedio</span>
+        <strong class="metric-value" id="avgWpm">—</strong>
+        <span class="metric-note">palabras por minuto</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Intentos totales</span>
+        <strong class="metric-value" id="totalAttempts">—</strong>
+        <span class="metric-note">prácticas registradas</span>
+      </article>
+    </section>
+
+    <section class="dash-card chart-card" id="chartCard" hidden>
+      <div class="dash-card-head">
+        <div>
+          <h2 class="dash-card-title">Evolución</h2>
+          <p class="dash-card-sub" id="chartSubtitle">Palabras bien tipeadas y velocidad</p>
+        </div>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Periodo del gráfico">
+          <input type="radio" class="btn-check" name="dashPeriod" id="dashPeriod30" value="30" checked>
+          <label class="btn btn-outline-secondary" for="dashPeriod30">30 días</label>
+          <input type="radio" class="btn-check" name="dashPeriod" id="dashPeriod90" value="90">
+          <label class="btn btn-outline-secondary" for="dashPeriod90">90 días</label>
+          <input type="radio" class="btn-check" name="dashPeriod" id="dashPeriod365" value="365">
+          <label class="btn btn-outline-secondary" for="dashPeriod365">1 año</label>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="evolutionChart" aria-label="Gráfico de evolución" role="img"></canvas>
+        <div class="chart-empty" id="chartEmpty" hidden>No hay prácticas en este periodo para graficar.</div>
+      </div>
+    </section>
+
+    <section class="dash-card table-card" id="tableCard" hidden>
+      <div class="dash-card-head">
+        <div>
+          <h2 class="dash-card-title">Historial</h2>
+          <p class="dash-card-sub" id="tableCount">—</p>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th class="text-end">Precisión</th>
+              <th class="text-end">Velocidad</th>
+              <th class="text-end">Palabras</th>
+              <th class="text-center">Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="historyRows"></tbody>
+        </table>
+        <div class="chart-empty" id="tableEmpty" hidden>Sin prácticas registradas en este periodo.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
