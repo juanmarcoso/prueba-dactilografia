@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET, require_POST
 
+import threading
+
 from .models import (
     MODE_DIGITAL,
     MODE_FISICO,
@@ -127,50 +129,86 @@ def _evaluate_digital(typed_text, reference_text, case_sensitive, ignore_accents
     return evaluated, correct_count, len(typed_tokens) - sum(1 for t in typed_tokens if t.isspace())
 
 
-_SPELL_CHECKER = None
+_LT = None
+_LT_LOCK = threading.Lock()
 
 
-def _spell_checker():
-    global _SPELL_CHECKER
-    if _SPELL_CHECKER is None:
-        try:
-            from spellchecker import SpellChecker
-        except ImportError:
-            raise RuntimeError('La librería pyspellchecker no está instalada.')
-        checker = SpellChecker(language='es')
-        checker.word_frequency.load_words(LEGAL_WORDS)
-        checker.word_frequency.load_words(['hay', 'problemas', 'creo', 'podamos', 'sintaxis', 'dactilografía', 'quiero', 'escritas', 'escrita', 'palabras', 'palabra', 'errores', 'error', 'comunes', 'común', 'tipeo', 'tipo', 'qué', 'quién', 'dónde', 'cómo', 'cuándo', 'estén', 'estaba', 'sería', 'también', 'hacia', 'página', 'información', 'desarrollo', 'aplicación', 'tecnología', 'colectivamente', 'colectivo', 'colectamente', 'esclitas'])
-        _SPELL_CHECKER = checker
-    return _SPELL_CHECKER
+def _get_lt():
+    global _LT
+    if _LT is None:
+        with _LT_LOCK:
+            if _LT is None:
+                try:
+                    import language_tool_python as lt
+                except ImportError:
+                    raise RuntimeError('La librería language_tool_python no está instalada.')
+                _LT = lt.LanguageTool('es')
+    return _LT
 
 def _evaluate_fisico(typed_text):
     typed_tokens = _tokenize_with_separators(typed_text)
-    spell = _spell_checker()
+    lt = _get_lt()
     evaluated = []
     correct_count = 0
     total_words = 0
-    for token in typed_tokens:
-        if token and not token.isspace():
-            word, trailing = _extract_word(token)
-            clean_word = re.sub(r'[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]', '', word)
-            clean_word = clean_word.lower()
-            if not clean_word:
-                is_correct = True
-            else:
-                try:
-                    is_correct = clean_word in spell
-                except Exception:
+    if typed_text:
+        try:
+            matches = lt.check(typed_text)
+        except Exception:
+            matches = []
+        offsets = []
+        pos = 0
+        for t in typed_tokens:
+            offsets.append(pos)
+            pos += len(t)
+        bad = set()
+        word_token_indices = []
+        for i, t in enumerate(typed_tokens):
+            if t and not t.isspace():
+                word_token_indices.append(i)
+        for mm in matches:
+            cat = str(mm.category)
+            rid = getattr(mm, 'rule_id', '') or ''
+            is_err = (cat == 'TYPOS') or any(k in rid for k in ['AGREE', 'GRAMMAR', 'VERB', 'SUBJECT', 'PRONOUN', 'CONCORD'])
+            if not is_err and rid == 'UPPERCASE_SENTENCE_START':
+                for i, (t, off) in enumerate(zip(typed_tokens, offsets)):
+                    if t and not t.isspace():
+                        if not (off + len(t) <= mm.offset or off >= mm.offset + mm.error_length):
+                            first = word_token_indices[0] if word_token_indices else -1
+                            if i != first:
+                                is_err = True
+            if not is_err and rid in ('QUE_TILDE2',):
+                is_err = True
+            if is_err:
+                for i, (t, off) in enumerate(zip(typed_tokens, offsets)):
+                    if t and not t.isspace():
+                        if not (off + len(t) <= mm.offset or off >= mm.offset + mm.error_length):
+                            bad.add(i)
+        for i, token in enumerate(typed_tokens):
+            if token and not token.isspace() and i not in bad:
+                word, trailing = _extract_word(token)
+                clean = re.sub(r'[^a-zA-ZáéíóúüñÁÉÍÓÚÜÑ]', '', word)
+                if clean:
                     try:
-                        is_correct = bool(spell.known([clean_word]))
+                        m2 = lt.check(clean)
+                        for x in m2:
+                            if str(x.category) == 'TYPOS' or x.rule_id == 'MORFOLOGIK_RULE_ES':
+                                bad.add(i)
+                                break
                     except Exception:
-                        is_correct = False
-            if is_correct:
-                correct_count += 1
-            total_words += 1
-            evaluated.append({'word': token, 'is_correct': is_correct})
-        else:
-            evaluated.append({'word': token, 'is_correct': True})
-    return evaluated, correct_count, total_words
+                        pass
+        for i, token in enumerate(typed_tokens):
+            if token and not token.isspace():
+                is_correct = i not in bad
+                if is_correct:
+                    correct_count += 1
+                total_words += 1
+                evaluated.append({'word': token, 'is_correct': is_correct})
+            else:
+                evaluated.append({'word': token, 'is_correct': True})
+        return evaluated, correct_count, total_words
+    else:
+        return evaluated, correct_count, total_words
 
 
 
